@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
+	"net/http"
+	"log"
 )
 
 // define page as a struct with two fields representing the tile and body
@@ -25,9 +27,17 @@ func loadPage(title string) (*Page, error) {
 	return &Page{Title: title, Body: body}, nil
 }
 
+func viewHandler(w http.ResponseWriter, r *http.Request){
+	title := r.URL.Path[len("/view/"):]
+	p, err := loadPage(title)
+	if err != nil{
+		http.Error(w, "Page not found", http.StatusNotFound)
+		return
+	}
+	fmt.Fprintf(w, "<h1>%s</h1><div>%s</div>", p.Title, p.Body)
+}
+
 func main() {
-	p1 :=	&Page{Title: "TestPage", Body: []byte("this is a sample page.")}
-	p1.save()
-	p2, _ := loadPage("TestPage")
-	fmt.Println(string(p2.Body))
+	http.HandleFunc("/view/", viewHandler)
+	log.Fatal(http.ListenAndServe(":8081", nil))
 }
