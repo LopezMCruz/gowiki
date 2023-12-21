@@ -1,6 +1,7 @@
 package main
 
 import (
+	"html/template"
 	"fmt"
 	"os"
 	"net/http"
@@ -50,6 +51,8 @@ func editHandler(w http.ResponseWriter, r *http.Request){
 	"</form>",
 	p.Title, p.Title, p.Body)
 }
+
+
 
 func main() {
 	http.HandleFunc("/view/", viewHandler)
