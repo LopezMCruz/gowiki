@@ -1,8 +1,8 @@
 package main
 
 import (
+	"regexp"
 	"html/template"
-	//"fmt"
 	"os"
 	"net/http"
 	"log"
@@ -16,6 +16,8 @@ type Page struct {
 
 // global variable
 var templates = template.Must(template.ParseFiles("edit.html", "view.html"))
+var validPath = regexp.MustCompile("^/(edit|save|view)/([a-zA-Z0-9]+)$")
+
 
 func (p *Page) save() error {
 	filename := p.Title + ".txt"
