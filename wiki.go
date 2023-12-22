@@ -46,13 +46,11 @@ func viewHandler(w http.ResponseWriter, r *http.Request){
 	title := r.URL.Path[len("/view/"):]
 	p, err := loadPage(title)
 	if err != nil{
-		http.Error(w, "Page not found", http.StatusNotFound)
+		http.Redirect( w, r, "/edit/"+title,http.StatusFound)
 		return
 
-	}
-	t,_:= template.ParseFiles("view.html")
-	t.Execute(w,p)
-//	renderTemplate(w,"view",p)
+	}	
+	renderTemplate(w,"view",p)
 }
 
 func editHandler(w http.ResponseWriter, r *http.Request){
@@ -63,7 +61,6 @@ func editHandler(w http.ResponseWriter, r *http.Request){
 	}
 	renderTemplate(w,"edit",p)
 }
-
 
 func main() {
 	http.HandleFunc("/view/", viewHandler)
